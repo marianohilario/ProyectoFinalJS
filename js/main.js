@@ -1,87 +1,21 @@
-// PRODUCTOS
-const productos = [
-    // Velas
-    {
-        id: "vela-01",
-        titulo: "Fanal",
-        imagen: "./img/velas/fanal.jpg",
-        categoria: {
-            nombre: "Velas",
-            id: "velas"
-        },
-        precio: 500
-    },
-    {
-        id: "vela-02",
-        titulo: "Aromatizante",
-        imagen: "./img/velas/aromatica.jpg",
-        categoria: {
-            nombre: "Velas",
-            id: "velas"
-        },
-        precio: 600
-    },
-    {
-        id: "vela-03",
-        titulo: "Flotante",
-        imagen: "./img/velas/flotante.jpg",
-        categoria: {
-            nombre: "Velas",
-            id: "velas"
-        },
-        precio: 400
-    },
-    // Aromatizantes
-    {
-        id: "aromatizante-01",
-        titulo: "Difusor",
-        imagen: "./img/aromatizantes/difusor.jpg",
-        categoria: {
-            nombre: "Aromatizantes",
-            id: "aromatizantes"
-        },
-        precio: 1000
-    },
-    {
-        id: "aromatizante-02",
-        titulo: "Esencias",
-        imagen: "./img/aromatizantes/esencias.jpg",
-        categoria: {
-            nombre: "Aromatizantes",
-            id: "aromatizantes"
-        },
-        precio: 300
-    },
-    // Textiles
-    {
-        id: "textil-01",
-        titulo: "Tapiz",
-        imagen: "./img/textiles/tapiz.jpg",
-        categoria: {
-            nombre: "Textiles",
-            id: "textiles"
-        },
-        precio: 1200
-    },
-    {
-        id: "textil-02",
-        titulo: "Mantel",
-        imagen: "./img/textiles/mantel.jpg",
-        categoria: {
-            nombre: "Textiles",
-            id: "textiles"
-        },
-        precio: 900
-    }
-];
-
-
 const contenedorProductos = document.querySelector("#contenedor-productos");
 const botonesCategorias = document.querySelectorAll(".boton-categoria");
 const tituloPrincipal = document.querySelector("#titulo-principal");
 let botonesAgregar = document.querySelectorAll(".producto-agregar");
 const numerito = document.querySelector("#numerito");
 
+let globalData 
+const totalProductos = async () => {
+    const productosFetch = await fetch('productos.json')
+    const productosJson = await productosFetch.json()
+    globalData = productosJson
+    return globalData
+}
+(async () => {
+    await totalProductos();
+    //console.log(dataGlobal);
+  })();
+//totalProductos()
 
 function cargarProductos(productosElegidos) {
 
@@ -106,7 +40,7 @@ function cargarProductos(productosElegidos) {
     actualizarBotonesAgregar();
 }
 
-cargarProductos(productos);
+//cargarProductos(globalData)
 
 botonesCategorias.forEach(boton => {
     boton.addEventListener("click", (e) => {
@@ -115,13 +49,15 @@ botonesCategorias.forEach(boton => {
         e.currentTarget.classList.add("active");
 
         if (e.currentTarget.id != "todos") {
-            const productoCategoria = productos.find(producto => producto.categoria.id === e.currentTarget.id);
+            const productoCategoria = globalData.find(producto => producto.categoria.id === e.currentTarget.id);
             tituloPrincipal.innerText = productoCategoria.categoria.nombre;
-            const productosBoton = productos.filter(producto => producto.categoria.id === e.currentTarget.id);
+            const productosBoton = globalData.filter(producto => producto.categoria.id === e.currentTarget.id);
             cargarProductos(productosBoton);
+            console.log(globalData)
+            console.log(productosBoton)
         } else {
             tituloPrincipal.innerText = "Todos los productos";
-            cargarProductos(productos);
+            cargarProductos(globalData);
         }
 
     })
@@ -148,7 +84,7 @@ if (productosEnCarritoLS) {
 
 function agregarAlCarrito(e) {
     const idBoton = e.currentTarget.id;
-    const productoAgregado = productos.find(producto => producto.id === idBoton);
+    const productoAgregado = globalData.find(producto => producto.id === idBoton);
 
     if(productosEnCarrito.some(producto => producto.id === idBoton)) {
         const index = productosEnCarrito.findIndex(producto => producto.id === idBoton);

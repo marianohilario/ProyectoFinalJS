@@ -137,6 +137,10 @@ main {
     margin-bottom: 2rem;
 }
 
+.producto{
+    transition: all 0.3s;
+}
+
 .producto:hover {
     transform: translateY(-10px);
 }
